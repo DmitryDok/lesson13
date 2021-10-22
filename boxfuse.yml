@@ -6,7 +6,6 @@
       register: instans_key
     - name: Save private key
       copy: content="{{instans_key.key.private_key}}" dest=".ssh/id_rsa" mode=0400
-      when: instans_key.changed
     - name: create security group
       ec2_group:
         name: SSH-Allow
@@ -15,9 +14,9 @@
         region: eu-central-1
         rules:
           - proto: tcp
-          - ports: 22
-          - cidr_ip: 0.0.0.0/0
-          - rule_desc: allow SSH
+            ports: 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow SSH
 - name: create aws instance
   hosts: localhost
   tasks:
