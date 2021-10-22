@@ -35,7 +35,6 @@
         wait: yes
         group: SSH-Allow
         count: 1
-        assign_public_ip: yes
       register: created
     - name: update inventory
       add_host:
