@@ -10,6 +10,36 @@
         count: 1
         vpc_subnet_id: vpc-0d08f3b64c0ef84ec
         assign_public_ip: yes
+      register: created- name: create aws instance connect
+  hosts: localhost
+  tasks:
+    - name: create key pair
+      ec2_key: name=aws_instans region=eu-central-1
+      register: instans_key
+    - name: Save private key
+      copy: content="{{instans_key.key.private_key}}" dest=".ssh/id_rsa" mode=0400
+    - name: create security group
+      ec2_group:
+        name: SSH-Allow
+        region: eu-central-1
+        rules:
+          - proto: tcp
+          - ports: 22
+          - cidr_ip: 0.0.0.0/0
+          - rule_desc: allow SSH
+- name: create aws instance
+  hosts: localhost
+  tasks:
+    - name: create instanse
+      ec2:
+        key_name: aws_instans
+        instance_type: t2.micro
+        image: ami-05f7491af5eef733a
+        wait: yes
+        group: aws-instans
+        count: 1
+        vpc_subnet_id: vpc-0d08f3b64c0ef84ec
+        assign_public_ip: yes
       register: created
     - name: update inventory
       add_host:
@@ -21,11 +51,11 @@
   become: yes
   tasks:
     - name: Ensure package is present
-      apt: name={{ item }} state=present
-        with_items:
-          - git
-          - default-jdk
-          - maven
+      apt: name={{item}} state=present
+      with_items:
+        - git
+        - default-jdk
+        - maven
     - name: create directory
       file: path=/home/boxfuse state=directory
     - name: clone repository
