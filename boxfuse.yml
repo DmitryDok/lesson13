@@ -3,7 +3,7 @@
   tasks:
     - name: Create an EC2 key
       ec2_key:
-        name: "mykey"
+        name: "mykey1"
         region: "eu-central-1"
       register: ec2_key
     - name: save private key
@@ -28,7 +28,7 @@
   tasks:
     - name: create instanse
       ec2:
-        key_name: mykey
+        key_name: "mykey1"
         region: eu-central-1
         instance_type: t2.micro
         image: ami-05f7491af5eef733a
