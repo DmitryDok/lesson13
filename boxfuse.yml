@@ -35,7 +35,7 @@
         wait: yes
         group: aws-instans
         count: 1
-        vpc_subnet_id: vpc-0d08f3b64c0ef84ec
+        vpc_subnet_id: subnet-0dfdc9d673f85136d
         assign_public_ip: yes
       register: created
     - name: update inventory
