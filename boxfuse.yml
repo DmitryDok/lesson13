@@ -32,10 +32,11 @@
         count: 1
       register: created
     - name: update inventory
-      add_host: name="{{ created.instances[0].public_ip }}   ansible_user=ubuntu" groups=builder
+      add_host: name="{{ created.instances[0].public_ip }} ansible_ssh_user=ubuntu" groups=builder
 
 - name: build boxfuse
   hosts: builder
+  remote_user: ubuntu
   become: yes
   become_user: root
   tasks:
