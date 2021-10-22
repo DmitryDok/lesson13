@@ -32,12 +32,10 @@
         count: 1
       register: created
     - name: update inventory
-      add_host:
-        name: "{{created.instances[0].public_ip}}"
-        groups: aws-instans
+      add_host: name="{{ created.instances[0].public_ip }}" groups=builder
 
 - name: build boxfuse
-  hosts: aws-instans
+  hosts: builder
   remote_user: ubuntu
   become: yes
   become_user: root
