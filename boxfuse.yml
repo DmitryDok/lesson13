@@ -10,6 +10,8 @@
     - name: create security group
       ec2_group:
         name: SSH-Allow
+        description: SSH allow sg
+        vpc_id: vpc-0d08f3b64c0ef84ec
         region: eu-central-1
         rules:
           - proto: tcp
