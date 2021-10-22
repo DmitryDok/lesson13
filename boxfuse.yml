@@ -45,7 +45,9 @@
   hosts: aws-instans
   vars:
     ansible_ssh_private_key_file: "./aws-private.pem"
+  remote_user: ubuntu
   become: yes
+  become_user: root
   tasks:
     - name: Ensure package is present
       apt: name={{item}} state=present
