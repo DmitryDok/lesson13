@@ -1,16 +1,4 @@
-  hosts: localhost
-  tasks:
-    - name: create instanse
-      ec2:
-        key_name: aws_instans
-        instance_type: t2.micro
-        image: ami-05f7491af5eef733a
-        wait: yes
-        group: aws-instans
-        count: 1
-        vpc_subnet_id: vpc-0d08f3b64c0ef84ec
-        assign_public_ip: yes
-      register: created- name: create aws instance connect
+ - name: create aws instance connect
   hosts: localhost
   tasks:
     - name: create key pair
