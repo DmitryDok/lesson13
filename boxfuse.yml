@@ -11,6 +11,7 @@
         content: "{{ ec2_key.key.private_key }}"
         dest: "./aws-private.pem"
         mode: 0400
+      when: ec2_key.changed
     - name: create security group
       ec2_group:
         name: SSH-Allow
@@ -42,7 +43,8 @@
 
 - name: build boxfuse
   hosts: aws-instans
-  ansible_ssh_private_key_file: "./aws-private.pem"
+  vars:
+    ansible_ssh_private_key_file: "./aws-private.pem"
   remote_user: ubuntu
   become: yes
   become_user: root
