@@ -1,4 +1,4 @@
- - name: create aws instance connect
+- name: create aws instance connect
   hosts: localhost
   tasks:
     - name: create key pair
