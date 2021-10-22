@@ -29,6 +29,7 @@
     - name: create instanse
       ec2:
         key_name: mykey
+        region: eu-central-1
         instance_type: t2.micro
         image: ami-05f7491af5eef733a
         wait: yes
