@@ -1,35 +1,19 @@
----
-- name: create aws instance connect
   hosts: localhost
   tasks:
-    - name: create key pair
-      ec2_key: name=aws_instans region=us-east-1
-      register: instans_key
-    - name: Save private key
-      copy: content="{{instans_key.key.private_key}}" dest=".ssh/id_rsa" mode=0400
-    - name: create security group
-      ec2_group:
-        name: SSH-Allow
-        region: us-east-1
-        rules:
-          - proto: tcp
-          - ports: 22
-          - cidr_ip: 0.0.0.0/0
-          - rule_desc: allow SSH
-- name: create aws instance
-  hosts: localhost
-  tasks:
-    ec2:
-      key_name: aws_instans
-      region: us-east-1
-      group: SSH-Allow
-      instance_type: t2.micro
-      image: ami-0ac80df6eff0e70b5
-      count: 1
-    register: created
+    - name: create instanse
+      ec2:
+        key_name: aws_instans
+        instance_type: t2.micro
+        image: ami-05f7491af5eef733a
+        wait: yes
+        group: aws-instans
+        count: 1
+        vpc_subnet_id: vpc-0d08f3b64c0ef84ec
+        assign_public_ip: yes
+      register: created
     - name: update inventory
       add_host:
-        name: "{{ output.instances[0].public_ip }}"
+        name: "{{created.instances[0].public_ip}}"
         groups: aws-instans
 
 - name: build boxfuse
@@ -37,12 +21,11 @@
   become: yes
   tasks:
     - name: Ensure package is present
-      apt: name={{item}} state=present
+      apt: name={{ item }} state=present
         with_items:
           - git
           - default-jdk
           - maven
-          - docker.io
     - name: create directory
       file: path=/home/boxfuse state=directory
     - name: clone repository
@@ -51,25 +34,9 @@
       shell: mvn package
       args:
         chdir: /home/boxfuse
-
-- name: Copy build to container
-  shell: docker cp /home/boxfuse/target/hello-1.0.war tomcat_cont:/usr/local/tomcat/webapps/hello-1.0.war
-- name: Log into DockerHub
-
-- name: prodakshen build
-  hosts: prod
-  become: yes
-  tasks:
-    - name: Ensure tomcat9 package is present
-      apt:
-        name: tomcat9
-        state: present
-    - name: Send file to prod
-      copy:
-        src: tmp/hello-1.0.war
-        dest: /var/lib/tomcat9/webapps/
-        follow: yes
-    - name: Ensure tomcat9 service is ctarted
-      service:
-        name: tomcat9
-        state: started
+    - name: PUT build to bucket
+      aws_s3:
+        bucket: mybacket1.dmitry-test.com
+        object: hello-1.0.war
+        src: /home/boxfuse/target/hello-1.0.war
+        mode: put
