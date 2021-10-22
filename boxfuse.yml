@@ -33,7 +33,7 @@
         instance_type: t2.micro
         image: ami-05f7491af5eef733a
         wait: yes
-        group: aws-instans
+        group: SSH-Allow
         count: 1
         vpc_subnet_id: subnet-0dfdc9d673f85136d
         assign_public_ip: yes
