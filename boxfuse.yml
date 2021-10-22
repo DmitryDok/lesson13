@@ -6,6 +6,7 @@
       register: instans_key
     - name: Save private key
       copy: content="{{instans_key.key.private_key}}" dest=".ssh/id_rsa" mode=0400
+      when: instans_key.changed
     - name: create security group
       ec2_group:
         name: SSH-Allow
