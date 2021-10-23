@@ -32,8 +32,8 @@
         count: 1
       register: created
     - name: print
-        debug:
-          var: created.instances[0].public_ip
+      debug:
+        var: created.instances[0].public_ip
     - name: update inventory
       add_host: name="{{ created.instances[0].public_ip }}" groups="builder"
 
