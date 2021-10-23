@@ -5,7 +5,7 @@
       ec2_key: name="mykey" region="eu-central-1"
       register: ec2_key
     - name: save private key
-      copy: content="{{ ec2_key.key.private_key }}" dest="~/.ssh/id_rsa" mode=0600
+      copy: content="{{ ec2_key.key.private_key }}" dest=".ssh/id_rsa" mode=0600
       when: ec2_key.changed
     - name: create security group
       ec2_group:
@@ -31,8 +31,11 @@
         group: SSH-Allow
         count: 1
       register: created
+    - name: print
+        debug:
+          var: created.instances[0].public_ip
     - name: update inventory
-      add_host: name="{{ created.instances[0].public_ip }}" groups=builder
+      add_host: name="{{ created.instances[0].public_ip }}" groups="builder"
 
 - name: build boxfuse
   hosts: builder
